@@ -2,6 +2,12 @@
 name = "cfg-or-panic"
 version = "0.1.0"
 edition = "2021"
+authors = ["Bugen Zhao <i@bugenzhao.com>"]
+description = "Replace function bodies with `unimplemented!()` when condition is not met."
+repository = "https://github.com/risingwavelabs/await-tree"
+keywords = ["proc-macro", "macro", "cfg"]
+categories = ["rust-patterns", "development-tools::build-utils"]
+license = "Apache-2.0"
 
 [lib]
 proc-macro = true
