@@ -6,6 +6,47 @@ use syn::{
     ItemImpl, ItemMod, Result, Signature,
 };
 
+/// Keep the function body under `#[cfg(..)]`, or replace it with `unimplemented!()` under `#[cfg(not(..))]`.
+///
+/// # Examples
+///
+/// `#[cfg_or_panic]` can be used on functions, `mod`, and `impl` blocks.
+///
+/// ## Function
+/// ```should_panic
+/// # use cfg_or_panic::cfg_or_panic;
+/// #[cfg_or_panic(foo)]
+/// fn foo() {
+///   println!("foo");
+/// }
+/// # fn main() { foo(); }
+/// ```
+///
+/// ## `mod`
+/// ```should_panic
+/// # use cfg_or_panic::cfg_or_panic;
+/// #[cfg_or_panic(foo)]
+/// mod foo {
+///   pub fn foo() {
+///     println!("foo");
+///   }
+/// }
+/// # fn main() { foo::foo(); }
+/// ```
+///
+/// ## `impl`
+/// ```should_panic
+/// # use cfg_or_panic::cfg_or_panic;
+/// struct Foo(String);
+///
+/// #[cfg_or_panic(foo)]
+/// impl Foo {
+///   fn foo(&self) {
+///     println!("foo: {}", self.0);
+///   }
+/// }
+/// # fn main() { Foo("bar".to_owned()).foo(); }
+/// ```
 #[proc_macro_attribute]
 pub fn cfg_or_panic(args: TokenStream, input: TokenStream) -> TokenStream {
     let expander = Expander::new(args);
@@ -101,9 +142,9 @@ impl Expander {
             #block
         });
 
-        let attr = parse_quote! {
+        let attr = parse_quote!(
             #[cfg_attr(not(#args), allow(unused_variables))]
-        };
+        );
         fn_attrs.push(attr);
     }
 }
