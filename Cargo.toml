@@ -1,6 +1,6 @@
 [package]
 name = "cfg-or-panic"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 authors = ["Bugen Zhao <i@bugenzhao.com>"]
 description = "Replace function bodies with `unimplemented!()` when condition is not met."
