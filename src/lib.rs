@@ -150,20 +150,13 @@ impl Expander {
             return_ty
         };
 
-        let unimplemented = if sig.constness.is_some() {
-            // const functions do not support formatting
-            quote!(
-                unimplemented!();
-            )
-        } else {
-            quote!(
-                unimplemented!(
-                    "function `{}` unimplemented under `#[cfg(not({}))]`",
-                    stringify!(#name),
-                    stringify!(#args)
-                );
-            )
-        };
+        let msg = format!(
+            "function `{}` unimplemented unless `#[cfg({})]` is activated",
+            name, args
+        );
+        let unimplemented = quote!(
+            panic!(#msg);
+        );
 
         let may_with_ret_ty = if let Some(ty) = return_ty {
             quote!(
